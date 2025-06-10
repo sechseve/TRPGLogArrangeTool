@@ -1118,7 +1118,11 @@ namespace TRPGLogArrangeTool
             return returnBool;
 
         }
-
+        /// <summary>
+        /// ルビ追加
+        /// </summary>
+        /// <param name="input">検証対象</param>
+        /// <returns></returns>
         private string RubyElementConvert(string input)
         {
             // 指定の記号がすべて含まれているかチェック
