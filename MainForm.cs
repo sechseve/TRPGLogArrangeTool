@@ -819,7 +819,7 @@ namespace TRPGLogArrangeTool
                         //Color = chatElement.Attribute("color")?.Value ?? string.Empty,
                         Color = COLOR_FFFFFF,
                         ImageFileName = chatElement.Attribute("imageIdentifier")?.Value ?? string.Empty,
-                        Text = chatElement.Value.Trim()
+                        Text = RubyElementConvert(chatElement.Value.Trim())
                     });
                 }
             }
@@ -1118,6 +1118,20 @@ namespace TRPGLogArrangeTool
             return returnBool;
 
         }
+
+        private string RubyElementConvert(string input)
+        {
+            // 指定の記号がすべて含まれているかチェック
+            if (input.Contains("|") && input.Contains("《") && input.Contains("》"))
+            {
+                return input.Replace("|", "<ruby>")
+                            .Replace("《", "<rt>")
+                            .Replace("》", "</rt></ruby>");
+            }
+            return input;
+        }
+
+
 
         /// <summary>
         /// コントロールの削除
