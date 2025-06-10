@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using TRPGLogArrangeTool.resource;
@@ -1124,15 +1125,18 @@ namespace TRPGLogArrangeTool
         /// <param name="input">検証対象</param>
         /// <returns></returns>
         private string RubyElementConvert(string input)
-        {
-            // 指定の記号がすべて含まれているかチェック
-            if (input.Contains("|") && input.Contains("《") && input.Contains("》"))
+        {   
+            // 必要な記号がすべて含まれているかチェック
+            if (!input.Contains("|") || !input.Contains("《") || !input.Contains("》"))
             {
-                return input.Replace("|", "<ruby>")
-                            .Replace("《", "<rt>")
-                            .Replace("》", "</rt></ruby>");
+                return input;
             }
-            return input;
+
+            // 正規表現を使用して | と 《》 のペアを見つけ変換する
+            string pattern = @"\|(.*?)《(.*?)》";
+            string replacement = @"<ruby>$1<rt>$2</rt></ruby>";
+
+            return Regex.Replace(input, pattern, replacement);
         }
 
 
