@@ -515,7 +515,7 @@ namespace TRPGLogArrangeTool
                         {
                             Name = strValue,
                             Area = areaValue,
-                            Text = tmpArea[4].Substring(7)
+                            Text = TextHtmlEmbellishment(tmpArea[4].Trim())
                         };
                         WriteDateList.Add(writeDate);
 
@@ -820,7 +820,7 @@ namespace TRPGLogArrangeTool
                         //Color = chatElement.Attribute("color")?.Value ?? string.Empty,
                         Color = COLOR_FFFFFF,
                         ImageFileName = chatElement.Attribute("imageIdentifier")?.Value ?? string.Empty,
-                        Text = RubyElementConvert(chatElement.Value.Trim())
+                        Text = TextHtmlEmbellishment(chatElement.Value.Trim())
                     });
                 }
             }
@@ -1043,7 +1043,7 @@ namespace TRPGLogArrangeTool
 
             if (outputBool && imageErrorCharacterNameList.Count > 0)
             {
-                string errorMessage = "出力はされましたが、以下キャラクター画像にエラーが確認されました。\r\n出力を確認してください。\r\n";
+                string errorMessage = "出力は実行されましたが、以下キャラクター画像にエラーが確認されました。\r\n出力を確認してください。\r\n";
                 string clipboardData = string.Empty;
                 for (int i = 0; i < imageErrorCharacterNameList.Count; i++)
                 {
@@ -1119,6 +1119,18 @@ namespace TRPGLogArrangeTool
             return returnBool;
 
         }
+
+        #region テキスト装飾
+        /// <summary>
+        /// テキスト装飾系
+        /// </summary>
+        /// <param name="input">検証対象</param>
+        /// <returns></returns>
+        private string TextHtmlEmbellishment(string input)
+        {
+            return EmbellishmentConverter(RubyElementConvert(input));
+        }
+
         /// <summary>
         /// ルビ追加
         /// </summary>
@@ -1126,20 +1138,60 @@ namespace TRPGLogArrangeTool
         /// <returns></returns>
         private string RubyElementConvert(string input)
         {   
-            // 必要な記号がすべて含まれているかチェック
-            if (!input.Contains("|") || !input.Contains("《") || !input.Contains("》"))
+            // 記号の条件チェック
+            bool hasPipe = input.Contains("|") || input.Contains("｜");
+            bool hasAngleBracketsBefore = input.Contains("《") && input.Contains("》");
+            bool hasAngleBracketsAfter = input.Contains("≪") && input.Contains("≫");
+
+            if (!hasPipe || (!hasAngleBracketsBefore && !hasAngleBracketsAfter))
             {
                 return input;
             }
 
-            // 正規表現を使用して | と 《》 のペアを見つけ変換する
-            string pattern = @"\|(.*?)《(.*?)》";
-            string replacement = @"<ruby>$1<rt>$2</rt></ruby>";
+            // パターンマッチングと変換処理
+            var pattern = @"[\|｜](.+?)(《|≪)(.+?)(》|≫)";
+            var regex = new Regex(pattern);
+            int matchCount = 0;
+            var result = new StringBuilder();
 
-            return Regex.Replace(input, pattern, replacement);
+            int lastIndex = 0;
+
+            foreach (Match match in regex.Matches(input))
+            {
+                result.Append(input.Substring(lastIndex, match.Index - lastIndex));
+                string baseText = match.Groups[1].Value;
+                string rubyText = match.Groups[3].Value;
+                result.Append($"<ruby>{baseText}<rt>{rubyText}</rt></ruby>");
+                lastIndex = match.Index + match.Length;
+                matchCount++;
+            }
+
+            // 残りの文字列を追加
+            result.Append(input.Substring(lastIndex));
+
+            // 有効な変換が1件もなければ元の文字列を返す
+            return matchCount > 0 ? result.ToString() : input;
+
         }
 
+        /// <summary>
+        /// 単純文字装飾処理追加
+        /// </summary>
+        /// <param name="input">検証対象</param>
+        /// <returns></returns>
+        private string EmbellishmentConverter(string input)
+        {
+            //打ち消し線
+            input = Regex.Replace(input, "~~~(.*?)~~~", "<s>$1</s>");
+            //強調
+            input = Regex.Replace(input, "###(.*?)###", "<b>$1</b>");
+            //改行
+            input = Regex.Replace(input, @"\r?\n", "<br>");
 
+            return input;
+        }
+
+        #endregion
 
         /// <summary>
         /// コントロールの削除

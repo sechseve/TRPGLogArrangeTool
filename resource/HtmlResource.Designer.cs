@@ -186,9 +186,8 @@ namespace TRPGLogArrangeTool.resource {
         ///flex: 1;
         ///vertical-align: top;
         ///padding: 10px 15px;
-        ///}
-        ///.chatTextArea .namearea{
-        ///font-weight: bold;
+        ///word-break: break-all;
+        ///white-space: normal;
         ///} [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HTMLHeader {

@@ -190,6 +190,8 @@ display: inline-block;
 flex: 1;
 vertical-align: top;
 padding: 10px 15px;
+word-break: break-all;
+white-space: normal;
 }
 .chatTextArea .namearea{
 font-weight: bold;

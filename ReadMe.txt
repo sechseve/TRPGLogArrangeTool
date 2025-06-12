@@ -29,3 +29,9 @@ ver1.100 各種修正
 	出力ファイル初期名をchatlog日時.htmlとなるように変更
 ver1.110
 	Udonarium with Flyのルビ技法(例:|一例《いちれい》)のような表示に対応。
+ver1.111
+	バグ修正
+ver1.2
+	バグ修正
+	Udonariumの改行に対応。
+	Udonarium with Flyにおけるダブルクロス2nd,3rdの特殊ダイス表記法に対応。
