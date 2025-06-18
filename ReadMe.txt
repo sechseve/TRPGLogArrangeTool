@@ -35,3 +35,6 @@ ver1.2
 	バグ修正
 	Udonariumの改行に対応。
 	Udonarium with Flyにおけるダブルクロス2nd,3rdの特殊ダイス表記法に対応。
+ver1.3
+	ファイル構成の変更
+	webpファイルに対応

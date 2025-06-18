@@ -838,7 +838,7 @@ namespace TRPGLogArrangeTool
             using (ZipArchive archive = ZipFile.OpenRead(folderPath))
             {
                 //ファイルをフィルタリング
-                string[] allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                string[] allowedExtensions = new[] { ".png", ".jpg", ".jpeg", ".webp" };
 
                 var imageEntries = archive.Entries
                     .Where(e =>
@@ -853,9 +853,9 @@ namespace TRPGLogArrangeTool
                 for (int i = 0; i < fileNamesWithoutExt.Count; i++)
                 {
                     // 拡張子の確認
-                    var ext = System.IO.Path.GetExtension(fileNamesExt[i]).ToLower();
-                    if (ext != ".png" && ext != ".jpg" && ext != ".jpeg")
-                    {
+                    var ext = Path.GetExtension(fileNamesExt[i]).ToLowerInvariant();
+
+                    if (!allowedExtensions.Contains(ext)) {
                         continue;
                     }
 
@@ -879,9 +879,27 @@ namespace TRPGLogArrangeTool
 
                         try
                         {
-                            using (Bitmap image = new Bitmap(memoryStream))
+                            Bitmap image;
+
+                            if (ext == ".webp")
                             {
-                                string image64 = BitmapToBase64StringAuto(image);
+                                using (var magickImage = new ImageMagick.MagickImage(memoryStream))
+                                using (var bmpStream = new MemoryStream())
+                                {
+                                    magickImage.Format = ImageMagick.MagickFormat.Bmp;
+                                    magickImage.Write(bmpStream);
+                                    bmpStream.Seek(0, SeekOrigin.Begin);
+                                    image = new Bitmap(bmpStream);
+                                }
+                            }
+                            else
+                            {
+                                image = new Bitmap(memoryStream);
+                            }
+
+                            using (image)
+                            {
+                                string image64 = BitmapToBase64StringAuto(image,ext);
                                 ImageList imageData = new ImageList
                                 {
                                     ImageName = fileNamesWithoutExt[i],
@@ -1271,32 +1289,38 @@ namespace TRPGLogArrangeTool
         /// <returns>生成したBitmapクラスオブジェクト</returns>
         private static Bitmap ImageFileOpen(string fileName)
         {
-            // 指定したファイルが存在するか？確認
-            if (System.IO.File.Exists(fileName) == false)
+            if (!File.Exists(fileName))
             {
                 return null;
             }
             // 拡張子の確認
-            var ext = System.IO.Path.GetExtension(fileName).ToLower();
+            var ext = Path.GetExtension(fileName).ToLower();
 
-            // ファイルの拡張子が対応しているファイルかどうか調べる
-            if (ext != ".png" && ext != ".jpg" && ext != ".jpeg")
+            if (ext != ".png" && ext != ".jpg" && ext != ".jpeg" && ext != ".webp")
             {
                 return null;
             }
 
             try
             {
-                Bitmap bmp;
-                // ファイルストリームでファイルを開く
-                using (var fs = new System.IO.FileStream(
-                    fileName,
-                    System.IO.FileMode.Open,
-                    System.IO.FileAccess.Read))
+                //webpだけ特殊処理
+                if (ext == ".webp")
                 {
-                    bmp = new Bitmap(fs);
+                    using (var magickImage = new ImageMagick.MagickImage(fileName))
+                    using (var bmpStream = new MemoryStream())
+                    {
+                        magickImage.Format = ImageMagick.MagickFormat.Bmp;
+                        magickImage.Write(bmpStream);
+                        bmpStream.Seek(0, SeekOrigin.Begin);
+                        return new Bitmap(bmpStream);
+                    }
                 }
-                return bmp;
+
+                // ファイルストリームでファイルを開く
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+                {
+                    return new Bitmap(fs);
+                }
             }
             catch
             {
@@ -1305,40 +1329,60 @@ namespace TRPGLogArrangeTool
             }
         }
 
+
         /// <summary>
-        /// Bitmapを自動的にJPEGまたはPNGにエンコードしてBase64文字列に変換する。
-        /// - 透過あり → PNG
-        /// - 透過なし → JPEG
+        /// BitmapをBase64文字列に変換する。
         /// </summary>
-        public static string BitmapToBase64StringAuto(Bitmap bitmap)
+        public static string BitmapToBase64StringAuto(Bitmap bitmap, string outputExt = ".auto")
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                // PNGにすべきかチェック
-                bool hasAlpha = ImageHasAlpha(bitmap);
-                ImageFormat format = hasAlpha ? ImageFormat.Png : ImageFormat.Jpeg;
-
-                // JPEG保存時にパラメータ指定（品質：90）
-                if (format == ImageFormat.Jpeg)
+                if (outputExt.ToLower() == ".webp")
                 {
-                    ImageCodecInfo jpegCodec = GetEncoder(ImageFormat.Jpeg);
-                    EncoderParameters encoderParams = new EncoderParameters(1);
-                    encoderParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
-
-                    // JPEGではインデックス形式など不正になる可能性があるので、変換しておく
-                    using (Bitmap converted = ConvertTo24bpp(bitmap))
+                    using (var tmpStream = new MemoryStream())
                     {
-                        converted.Save(ms, jpegCodec, encoderParams);
+                        using (Bitmap converted = ConvertTo24bpp(bitmap)) 
+                        {
+                            converted.Save(tmpStream, ImageFormat.Png);
+                        }
+
+                        tmpStream.Seek(0, SeekOrigin.Begin);
+                        using (var magickImage = new ImageMagick.MagickImage(tmpStream))
+                        {
+                            magickImage.Format = ImageMagick.MagickFormat.WebP;
+                            magickImage.Write(ms);
+                        }
                     }
                 }
                 else
                 {
-                    bitmap.Save(ms, ImageFormat.Png);
+                    // PNGにすべきかチェック
+                    bool hasAlpha = ImageHasAlpha(bitmap);
+                    ImageFormat format = hasAlpha ? ImageFormat.Png : ImageFormat.Jpeg;
+
+                    // JPEG保存時にパラメータ指定（品質：90）
+                    if (format == ImageFormat.Jpeg)
+                    {
+                        ImageCodecInfo jpegCodec = GetEncoder(ImageFormat.Jpeg);
+                        EncoderParameters encoderParams = new EncoderParameters(1);
+                        encoderParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
+
+                        // JPEGではインデックス形式など不正になる可能性があるので、変換しておく
+                        using (Bitmap converted = ConvertTo24bpp(bitmap))
+                        {
+                            converted.Save(ms, jpegCodec, encoderParams);
+                        }
+                    }
+                    else
+                    {
+                        bitmap.Save(ms, ImageFormat.Png);
+                    }
                 }
 
                 return Convert.ToBase64String(ms.ToArray());
             }
         }
+
 
         /// <summary>
         /// アルファチャネル（透過）を含むか判定
@@ -1358,6 +1402,7 @@ namespace TRPGLogArrangeTool
             Bitmap newBmp = new Bitmap(original.Width, original.Height, PixelFormat.Format24bppRgb);
             using (Graphics g = Graphics.FromImage(newBmp))
             {
+                g.Clear(Color.White);
                 g.DrawImage(original, 0, 0, original.Width, original.Height);
             }
             return newBmp;
