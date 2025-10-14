@@ -215,11 +215,7 @@ namespace TRPGLogArrangeTool.ViewModel
                 return false;
             }
             string xmlContent = ExtractXmlFromZip(folderPath, targetPath);
-            ParseChatMessages(xmlContent, folderPath, flyFlg);
-            if (!detailCheck)
-            {
-                ConvertWrite();
-            }
+            ParseChatMessages(xmlContent, folderPath, flyFlg,detailCheck);
             return true;
         }
 
@@ -275,20 +271,14 @@ namespace TRPGLogArrangeTool.ViewModel
         /// </summary>
         /// <param name="xmlString"></param>
         /// <returns></returns>        
-        private void ParseChatMessages(string xmlString, string folderPath, bool flyFlg)
+        private void ParseChatMessages(string xmlString, string folderPath, bool flyFlg, bool detailCheck)
         {
             // 一時領域
             List<ChatMessage> tmpMessageList = new List<ChatMessage>();
             List<string> tmpIconFilePathList = new List<string>();
+            List<string> errorImage = new List<string>();
 
             XElement root = XElement.Parse(xmlString);
-
-            // ChatMessageList と ChatNameList を初期化
-            ChatMessageList.Clear();
-            ChatNameList.Clear();
-            ImageCache.Clear();
-            ChatNameList.Add(new ChatName() { Name = NAME_EVENT });
-            ChatNameList.Add(new ChatName() { Name = NAME_EVENT_CHARACTER });
 
             // Flyの場合以下を解析            
             List<CharacterStandInfo> standInfos = new List<CharacterStandInfo>();
@@ -374,48 +364,74 @@ namespace TRPGLogArrangeTool.ViewModel
                 {
                     string nameWithoutExt = Path.GetFileNameWithoutExtension(entry.Name);
                     string ext = Path.GetExtension(entry.Name).ToLowerInvariant();
-                    if (!allowedExtensions.Contains(ext))
+
+                    try
                     {
-                        continue;
-                    }
-
-                    var matchingMessages = tmpMessageList.Where(x => x.ImageKey == nameWithoutExt).ToList();
-
-                    if (matchingMessages.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    using (var ms = new MemoryStream())
-                    {
-                        entry.Open().CopyTo(ms);
-                        ms.Seek(0, SeekOrigin.Begin);
-
-                        // ImageCache登録
-                        string base64 = Convert.ToBase64String(ms.ToArray());
-                        var bmp = ImageCache.GetOrAddFromBase64(base64, out string key);
-
-                        // ChatMessageとChatName にキーを設定
-                        foreach (var msg in matchingMessages)
+                        if (!allowedExtensions.Contains(ext))
                         {
-                            msg.ImageKey = key;
+                            continue;
                         }
 
-                        foreach (var item in ChatNameList.Where(x => x.Name.Trim() == matchingMessages[0].Name.Trim()))
+                        var matchingMessages = tmpMessageList.Where(x => x.ImageKey == nameWithoutExt).ToList();
+
+                        if (matchingMessages.Count == 0)
                         {
-                            if (!item.ImageKeys.Contains(key))
+                            continue;
+                        }
+
+                        using (var ms = new MemoryStream())
+                        {
+                            entry.Open().CopyTo(ms);
+                            ms.Seek(0, SeekOrigin.Begin);
+
+                            // ImageCache登録
+                            string base64 = Convert.ToBase64String(ms.ToArray());
+                            var bmp = ImageCache.GetOrAddFromBase64(base64, out string key);
+
+                            // ChatMessageとChatName にキーを設定
+                            foreach (var msg in matchingMessages)
                             {
-                                item.ImageKeys.Add(key);
+                                msg.ImageKey = key;
+                            }
+
+                            foreach (var item in ChatNameList.Where(x => x.Name.Trim() == matchingMessages[0].Name.Trim()))
+                            {
+                                if (!item.ImageKeys.Contains(key))
+                                {
+                                    item.ImageKeys.Add(key);
+                                }
                             }
                         }
                     }
+                    catch
+                    {
+                        errorImage.Add(Path.GetFileName(entry.Name));
+                        continue;
+                    }
                 }
             }
-
             // 時系列でソート
             foreach (var item in tmpMessageList.OrderBy(x => x.TimeStamp).ToList())
             {
                 ChatMessageList.Add(item);
+            }
+            if (!detailCheck)
+            {
+                if (errorImage.Count > 0)
+                {
+                    if (!ConvertWrite(true))
+                    {
+                        ImageAddErrorMessage(errorImage,true);
+                    }
+                }
+                else
+                {
+                    ConvertWrite();
+                }
+            }
+            else if (errorImage.Count > 0)
+            {
+                ImageAddErrorMessage(errorImage);
             }
         }
         /// <summary>
@@ -508,7 +524,7 @@ namespace TRPGLogArrangeTool.ViewModel
         /// <summary>
         /// 変換処理
         /// </summary>
-        public void ConvertWrite()
+        public bool ConvertWrite(bool errorFlg = false)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(HtmlResource.HTMLHeader);
@@ -660,10 +676,15 @@ namespace TRPGLogArrangeTool.ViewModel
             sb.AppendLine(HtmlResource.HTMLFooter);
 
             bool result = SetHTML(sb.ToString());
-            if (result)
+            if (result && !errorFlg)
             {
                 MessageBox.Show("正常に出力されました", CONST_INFOMATION, MessageBoxButton.OK, MessageBoxImage.Information);
             }
+            else if (result && errorFlg)
+            {
+                return false;
+            }
+            return true;
 
         }
         /// <summary>
@@ -1030,7 +1051,7 @@ namespace TRPGLogArrangeTool.ViewModel
         /// 画像追加エラーダイアログ表示
         /// </summary>
         /// <param name="errorFileName"></param>
-        public static void ImageAddErrorMessage(List<string> errorFileName)
+        public static void ImageAddErrorMessage(List<string> errorFileName,bool writeHtmlFlg = false)
         {
             if (errorFileName.Count == 0)
             {
@@ -1039,21 +1060,26 @@ namespace TRPGLogArrangeTool.ViewModel
 
             string fileNameData = string.Empty;
 
-            if (errorFileName.Count == 1)
+            foreach (var item in errorFileName)
             {
-                MessageBox.Show("画像の追加に失敗しました。ファイルを再確認してください", CONST_ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else
-            {
-                foreach (var item in errorFileName)
+                if (!String.IsNullOrEmpty(fileNameData))
                 {
-                    if (!String.IsNullOrEmpty(fileNameData))
-                    {
-                        fileNameData += "\r\n";
-                    }
-                    fileNameData += item;
+                    fileNameData += "\r\n";
                 }
-                if (!string.IsNullOrEmpty(fileNameData))
+                fileNameData += item;
+            }
+            if (!string.IsNullOrEmpty(fileNameData))
+            {
+                if (writeHtmlFlg)
+                {
+                    if (MessageBox.Show("ファイルは出力されましたが、" + errorFileName.Count.ToString() + "件の画像の追加に失敗しました。\r\n失敗したファイル名をクリップボードに保存しますか？", CONST_ERROR, MessageBoxButton.YesNo, MessageBoxImage.Error)
+                        == MessageBoxResult.Yes)
+                    {
+                        Clipboard.SetText(fileNameData);
+                        MessageBox.Show("クリップボードにコピーしました。", CONST_INFOMATION, MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                else
                 {
                     if (MessageBox.Show(errorFileName.Count.ToString() + "件の画像の追加に失敗しました。ファイルを再確認してください。\r\n失敗したファイル名をクリップボードに保存しますか？", CONST_ERROR, MessageBoxButton.YesNo, MessageBoxImage.Error)
                         == MessageBoxResult.Yes)
