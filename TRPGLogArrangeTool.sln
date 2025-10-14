@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.9.34414.90
+VisualStudioVersion = 17.14.36301.6 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRPGLogArrangeTool", "TRPGLogArrangeTool.csproj", "{F026B026-8B7D-48B7-B1CE-3444547770C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRPGLogArrangeTool", "TRPGLogArrangeTool.csproj", "{4A4B4D7C-FE60-42CD-A744-367B5DE87F2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F026B026-8B7D-48B7-B1CE-3444547770C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F026B026-8B7D-48B7-B1CE-3444547770C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F026B026-8B7D-48B7-B1CE-3444547770C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F026B026-8B7D-48B7-B1CE-3444547770C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4B4D7C-FE60-42CD-A744-367B5DE87F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4B4D7C-FE60-42CD-A744-367B5DE87F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4B4D7C-FE60-42CD-A744-367B5DE87F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4B4D7C-FE60-42CD-A744-367B5DE87F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A71A1A2B-D735-485D-824D-2E12649F0FEB}
+		SolutionGuid = {83E776F8-5D86-4AF7-8C2A-9208282598B8}
 	EndGlobalSection
 EndGlobal

@@ -121,6 +121,8 @@
     <value>.chat.{0} .chatOneLine,.chat.{0} 
 span{{
  color: {1} ; 
+ white-space: normal;
+ word-wrap: break-word;
 }}</value>
     <comment>{0}=ユーザーID {1}=カラー</comment>
   </data>
@@ -135,6 +137,10 @@ span{{
     <value>&lt;div class="chat {0} right"&gt;</value>
     <comment>{0}=ユーザID</comment>
   </data>
+  <data name="DivChatUserSecret" xml:space="preserve">
+    <value>&lt;div class="chat {0}  secretChat"&gt;</value>
+    <comment>{0}=ユーザID</comment>
+  </data>
   <data name="DivChatUserMain" xml:space="preserve">
     <value>&lt;div class="chat {0}"&gt;</value>
     <comment>{0}=ユーザID</comment>
@@ -144,16 +150,28 @@ span{{
 &lt;/div&gt;</value>
   </data>
   <data name="DivIcon" xml:space="preserve">
-    <value>&lt;div class="icon image_{0}"&gt;&lt;/div&gt;</value>
+    <value>&lt;div class="icon image_{0} center"&gt;&lt;/div&gt;</value>
     <comment>{0}=画像ID</comment>
   </data>
   <data name="DivMainChat" xml:space="preserve">
-    <value>&lt;div class="chatinfo"&gt;&lt;span class="namearea"&gt;{0}&lt;/span&gt; &lt;span class="tabnamearea"&gt;[メイン]&lt;/span&gt;&lt;/div&gt;</value>
-    <comment>{0}=ユーザー名</comment>
+    <value>&lt;div class="chatinfo"&gt;&lt;span class="namearea"&gt;{0}&lt;/span&gt; &lt;span class="tabnamearea"&gt;[{1}]&lt;/span&gt;&lt;/div&gt;</value>
+    <comment>{0}=ユーザー名 {1}=領域名</comment>
   </data>
   <data name="DivMainChatETC" xml:space="preserve">
     <value>&lt;div class="chatinfo"&gt;&lt;span class="namearea"&gt;{0}&lt;/span&gt; &lt;span class="tabnamearea"&gt;[{1}]&lt;/span&gt;&lt;/div&gt;</value>
     <comment>{0}=ユーザー名 {1}=領域名</comment>
+  </data>
+  <data name="EventCharacter" xml:space="preserve">
+    <value>&lt;div class="chatImage_Icon"&gt;
+  &lt;img src="data:image/png;base64,{0}"      alt="EventImage"&gt;
+&lt;/div&gt;</value>
+    <comment>{0}=イベントキャラ画像</comment>
+  </data>
+  <data name="EventImage" xml:space="preserve">
+    <value>&lt;div class="chatImage"&gt;
+  &lt;img src="data:image/png;base64,{0}"      alt="EventImage"&gt;
+&lt;/div&gt;</value>
+    <comment>{0}=イベント画像</comment>
   </data>
   <data name="HTMLFooter" xml:space="preserve">
     <value>&lt;/body&gt;
@@ -167,10 +185,13 @@ span{{
         &lt;title&gt;&lt;/title&gt;
 &lt;style&gt;
 .icon {
-display: inline-block;
-width: 80px;
-height: 80px;
-margin: 10px;
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+  background-image: url("icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 .chat {
 background-color: #F8F8F8;
@@ -196,11 +217,26 @@ white-space: normal;
 .chatTextArea .namearea{
 font-weight: bold;
 }
-.secretChat{
-background-color: #F0F0F0;
+.chat.secretChat{
+text-align: right;
+background-color: #FA8072;
 }
 .width100{
 width: 100%;
+}
+.chatImage img {
+  max-width: 70%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: block;
+  margin: 12px auto;
+}
+.chatImage_Icon img {
+  max-width: 20%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: block;
+  margin: 12px auto;
 }</value>
   </data>
   <data name="ImageData" xml:space="preserve">
@@ -234,6 +270,12 @@ background-size: contain;
   </data>
   <data name="StringOtherJP" xml:space="preserve">
     <value>雑談</value>
+  </data>
+  <data name="StringSecretEN" xml:space="preserve">
+    <value>secret</value>
+  </data>
+  <data name="StringSecretJP" xml:space="preserve">
+    <value>秘匿</value>
   </data>
   <data name="StyleEnd" xml:space="preserve">
     <value>&lt;/style&gt;

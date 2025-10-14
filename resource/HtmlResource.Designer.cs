@@ -22,7 +22,7 @@ namespace TRPGLogArrangeTool.resource {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class HtmlResource {
+    public class HtmlResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace TRPGLogArrangeTool.resource {
         ///   このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TRPGLogArrangeTool.resource.HtmlResource", typeof(HtmlResource).Assembly);
@@ -51,7 +51,7 @@ namespace TRPGLogArrangeTool.resource {
         ///   現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -64,9 +64,11 @@ namespace TRPGLogArrangeTool.resource {
         ///   .chat.{0} .chatOneLine,.chat.{0} 
         ///span{{
         /// color: {1} ; 
+        /// white-space: normal;
+        /// word-wrap: break-word;
         ///}} に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string ChatColor {
+        public static string ChatColor {
             get {
                 return ResourceManager.GetString("ChatColor", resourceCulture);
             }
@@ -75,7 +77,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   &lt;div class=&quot;chatOneLine&quot;&gt;{0}&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivChatArea {
+        public static string DivChatArea {
             get {
                 return ResourceManager.GetString("DivChatArea", resourceCulture);
             }
@@ -84,7 +86,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   &lt;div class=&quot;chatTextArea&quot;&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivChatTextArea {
+        public static string DivChatTextArea {
             get {
                 return ResourceManager.GetString("DivChatTextArea", resourceCulture);
             }
@@ -93,7 +95,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   &lt;div class=&quot;chat {0} right&quot;&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivChatUserETC {
+        public static string DivChatUserETC {
             get {
                 return ResourceManager.GetString("DivChatUserETC", resourceCulture);
             }
@@ -102,9 +104,18 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   &lt;div class=&quot;chat {0}&quot;&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivChatUserMain {
+        public static string DivChatUserMain {
             get {
                 return ResourceManager.GetString("DivChatUserMain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;div class=&quot;chat {0}  secretChat&quot;&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DivChatUserSecret {
+            get {
+                return ResourceManager.GetString("DivChatUserSecret", resourceCulture);
             }
         }
         
@@ -112,25 +123,25 @@ namespace TRPGLogArrangeTool.resource {
         ///   &lt;/div&gt;
         ///&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivEndLine {
+        public static string DivEndLine {
             get {
                 return ResourceManager.GetString("DivEndLine", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   &lt;div class=&quot;icon image_{0}&quot;&gt;&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
+        ///   &lt;div class=&quot;icon image_{0} center&quot;&gt;&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivIcon {
+        public static string DivIcon {
             get {
                 return ResourceManager.GetString("DivIcon", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   &lt;div class=&quot;chatinfo&quot;&gt;&lt;span class=&quot;namearea&quot;&gt;{0}&lt;/span&gt; &lt;span class=&quot;tabnamearea&quot;&gt;[メイン]&lt;/span&gt;&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
+        ///   &lt;div class=&quot;chatinfo&quot;&gt;&lt;span class=&quot;namearea&quot;&gt;{0}&lt;/span&gt; &lt;span class=&quot;tabnamearea&quot;&gt;[{1}]&lt;/span&gt;&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivMainChat {
+        public static string DivMainChat {
             get {
                 return ResourceManager.GetString("DivMainChat", resourceCulture);
             }
@@ -139,9 +150,31 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   &lt;div class=&quot;chatinfo&quot;&gt;&lt;span class=&quot;namearea&quot;&gt;{0}&lt;/span&gt; &lt;span class=&quot;tabnamearea&quot;&gt;[{1}]&lt;/span&gt;&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DivMainChatETC {
+        public static string DivMainChatETC {
             get {
                 return ResourceManager.GetString("DivMainChatETC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;div class=&quot;chatImage_Icon&quot;&gt;
+        ///  &lt;img src=&quot;data:image/png;base64,{0}&quot;      alt=&quot;EventImage&quot;&gt;
+        ///&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string EventCharacter {
+            get {
+                return ResourceManager.GetString("EventCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;div class=&quot;chatImage&quot;&gt;
+        ///  &lt;img src=&quot;data:image/png;base64,{0}&quot;      alt=&quot;EventImage&quot;&gt;
+        ///&lt;/div&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string EventImage {
+            get {
+                return ResourceManager.GetString("EventImage", resourceCulture);
             }
         }
         
@@ -149,7 +182,7 @@ namespace TRPGLogArrangeTool.resource {
         ///   &lt;/body&gt;
         ///&lt;/html&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string HTMLFooter {
+        public static string HTMLFooter {
             get {
                 return ResourceManager.GetString("HTMLFooter", resourceCulture);
             }
@@ -163,10 +196,13 @@ namespace TRPGLogArrangeTool.resource {
         ///        &lt;title&gt;&lt;/title&gt;
         ///&lt;style&gt;
         ///.icon {
-        ///display: inline-block;
-        ///width: 80px;
-        ///height: 80px;
-        ///margin: 10px;
+        ///  width: 80px;
+        ///  height: 80px;
+        ///  margin: 10px;
+        ///  background-image: url(&quot;icon.png&quot;);
+        ///  background-repeat: no-repeat;
+        ///  background-position: center;
+        ///  background-size: contain;
         ///}
         ///.chat {
         ///background-color: #F8F8F8;
@@ -180,17 +216,9 @@ namespace TRPGLogArrangeTool.resource {
         ///.chat.right {
         ///text-align: right;
         ///background-color: #CCCCCC;
-        ///}
-        ///.chatTextArea {
-        ///display: inline-block;
-        ///flex: 1;
-        ///vertical-align: top;
-        ///padding: 10px 15px;
-        ///word-break: break-all;
-        ///white-space: normal;
-        ///} [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string HTMLHeader {
+        public static string HTMLHeader {
             get {
                 return ResourceManager.GetString("HTMLHeader", resourceCulture);
             }
@@ -199,7 +227,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   background-image: url(data:image/png;base64,{0}); に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string ImageData {
+        public static string ImageData {
             get {
                 return ResourceManager.GetString("ImageData", resourceCulture);
             }
@@ -211,7 +239,7 @@ namespace TRPGLogArrangeTool.resource {
         ///}
         /// に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string Imagefooter {
+        public static string Imagefooter {
             get {
                 return ResourceManager.GetString("Imagefooter", resourceCulture);
             }
@@ -220,7 +248,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   .image_{0}{{ に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string ImageHeader {
+        public static string ImageHeader {
             get {
                 return ResourceManager.GetString("ImageHeader", resourceCulture);
             }
@@ -229,7 +257,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   info に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string StringInfoEN {
+        public static string StringInfoEN {
             get {
                 return ResourceManager.GetString("StringInfoEN", resourceCulture);
             }
@@ -238,7 +266,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   情報 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string StringInfoJP {
+        public static string StringInfoJP {
             get {
                 return ResourceManager.GetString("StringInfoJP", resourceCulture);
             }
@@ -247,7 +275,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   main に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string StringMainEN {
+        public static string StringMainEN {
             get {
                 return ResourceManager.GetString("StringMainEN", resourceCulture);
             }
@@ -256,7 +284,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   メイン に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string StringMainJP {
+        public static string StringMainJP {
             get {
                 return ResourceManager.GetString("StringMainJP", resourceCulture);
             }
@@ -265,7 +293,7 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   other に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string StringOtherEN {
+        public static string StringOtherEN {
             get {
                 return ResourceManager.GetString("StringOtherEN", resourceCulture);
             }
@@ -274,9 +302,27 @@ namespace TRPGLogArrangeTool.resource {
         /// <summary>
         ///   雑談 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string StringOtherJP {
+        public static string StringOtherJP {
             get {
                 return ResourceManager.GetString("StringOtherJP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   secret に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string StringSecretEN {
+            get {
+                return ResourceManager.GetString("StringSecretEN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   秘匿 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string StringSecretJP {
+            get {
+                return ResourceManager.GetString("StringSecretJP", resourceCulture);
             }
         }
         
@@ -285,7 +331,7 @@ namespace TRPGLogArrangeTool.resource {
         ///    &lt;/head&gt;
         ///    &lt;body&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string StyleEnd {
+        public static string StyleEnd {
             get {
                 return ResourceManager.GetString("StyleEnd", resourceCulture);
             }
