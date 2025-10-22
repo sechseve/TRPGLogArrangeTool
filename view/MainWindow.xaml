@@ -12,265 +12,276 @@
     <Window.Resources>
         <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="4*" x:Name="DetailColumn"/>
-        </Grid.ColumnDefinitions>
-        <Border
-                BorderBrush="Gray"
-                BorderThickness="1"
-                CornerRadius="0"/>
-        <Border Grid.Column="1"
-                BorderBrush="Gray"
-                BorderThickness="0,1,1,1"
-                CornerRadius="0"/>
-        <Grid x:Name="OverlayPanel"
-              Grid.ColumnSpan="2"
-              Background="#80000000"
-              Visibility="Collapsed"
-              Panel.ZIndex="999"/>
-
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="9*"/>
-            </Grid.RowDefinitions>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="menuUpdateCheck" Background="White" Click="menuUpdateCheck_Click">
+                <MenuItem.Header>
+                    <Border BorderBrush="Gray" Padding="0">
+                        <TextBlock Text="バージョンチェック" Foreground="Black" FontSize="12"/>
+                    </Border>
+                </MenuItem.Header>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="4*" x:Name="DetailColumn"/>
+            </Grid.ColumnDefinitions>
             <Border
-                BorderBrush="Gray"
-                BorderThickness="0,0,0,1"
-                CornerRadius="0"/>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="11*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
-                <GroupBox Grid.Column="0" Margin="1,3,1,3" Header="ファイルタイプ選択" >
-                    <Grid>
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    CornerRadius="0"/>
+            <Border Grid.Column="1"
+                    BorderBrush="Gray"
+                    BorderThickness="0,1,1,1"
+                    CornerRadius="0"/>
+            <Grid x:Name="OverlayPanel"
+                  Grid.ColumnSpan="2"
+                  Background="#80000000"
+                  Visibility="Collapsed"
+                  Panel.ZIndex="999"/>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="9*"/>
+                </Grid.RowDefinitions>
+                <Border
+                    BorderBrush="Gray"
+                    BorderThickness="0,0,0,1"
+                    CornerRadius="0"/>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="11*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Margin="1,3,1,3" Header="ファイルタイプ選択" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <RadioButton x:Name="radioButtonUD" Grid.Row="0" Content="Udonarium" IsChecked="True" GroupName="RadioGroup" VerticalContentAlignment="Center" />
+                            <RadioButton x:Name="radioButtonCC" Grid.Row="1" Content="CCFOLIA"  IsChecked="False" GroupName="RadioGroup"  VerticalContentAlignment="Center"/>
+                        
+                        </Grid>
+                    </GroupBox>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="7*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="buttonFileSelected" Grid.Column="0" Content="ファイル選択" Margin="1" MaxHeight="25" Click="ButtonFileSelected_Click"/>
+                        <TextBox Grid.Column="1" x:Name="textBoxFileAddress" Margin="1,3,1,3" IsReadOnly="True" Text="対象ファイルドラッグアンドドロップ可" TextWrapping="WrapWithOverflow"
+                                 TextAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Background="DarkGray"
+                                 AllowDrop="True" MouseDoubleClick="TextBoxFileAddress_MouseDoubleClick" PreviewDragOver="TextBoxFileAddress_PreviewDragOver" Drop="TextBoxFileAddress_Drop"/>
+                    </Grid>
+                    <Grid Grid.Column="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <RadioButton x:Name="radioButtonUD" Grid.Row="0" Content="Udonarium" IsChecked="True" GroupName="RadioGroup" VerticalContentAlignment="Center" />
-                        <RadioButton x:Name="radioButtonCC" Grid.Row="1" Content="CCFOLIA"  IsChecked="False" GroupName="RadioGroup"  VerticalContentAlignment="Center"/>
-                        
+                        <CheckBox x:Name="checkStandUse" Grid.Row="0" Margin="5,1,1,1" Content="スタンド解析" VerticalAlignment="Center"
+                            ToolTip="Udonarium with Flyでのみ使用されます"/>
+                        <CheckBox x:Name="checkBoxDetail" Grid.Row="1" Margin="5,1,1,1" Content="詳細解析" VerticalContentAlignment="Center" Checked="CheckBoxDetail_Checked" Unchecked="CheckBoxDetail_Unchecked"/>
+                        <Button x:Name="buttonFileRead" Grid.Row="2" Content="解析" Margin="5,1,1,1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" MaxHeight="25" Width="80"
+                               Click="ButtonFileRead_Click" IsEnabled="False"/>
+                        <Button x:Name="buttonReWriteStart" Grid.Row="3" Content="出力" Margin="5,1,1,3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" MaxHeight="25" Width="80"
+                               Click="ButtonReWriteStart_Click" IsEnabled="False"/>
                     </Grid>
-                </GroupBox>
-                <Grid Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="7*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="buttonFileSelected" Grid.Column="0" Content="ファイル選択" Margin="1" MaxHeight="25" Click="ButtonFileSelected_Click"/>
-                    <TextBox Grid.Column="1" x:Name="textBoxFileAddress" Margin="1,3,1,3" IsReadOnly="True" Text="対象ファイルドラッグアンドドロップ可" TextWrapping="WrapWithOverflow"
-                             TextAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Background="DarkGray"
-                             AllowDrop="True" MouseDoubleClick="TextBoxFileAddress_MouseDoubleClick" PreviewDragOver="TextBoxFileAddress_PreviewDragOver" Drop="TextBoxFileAddress_Drop"/>
                 </Grid>
-                <Grid Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <CheckBox x:Name="checkStandUse" Grid.Row="0" Margin="5,1,1,1" Content="スタンド解析" VerticalAlignment="Center"
-                        ToolTip="Udonarium with Flyでのみ使用されます"/>
-                    <CheckBox x:Name="checkBoxDetail" Grid.Row="1" Margin="5,1,1,1" Content="詳細解析" VerticalContentAlignment="Center" Checked="CheckBoxDetail_Checked" Unchecked="CheckBoxDetail_Unchecked"/>
-                    <Button x:Name="buttonFileRead" Grid.Row="2" Content="解析" Margin="5,1,1,1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" MaxHeight="25" Width="80"
-                           Click="ButtonFileRead_Click" IsEnabled="False"/>
-                    <Button x:Name="buttonReWriteStart" Grid.Row="3" Content="出力" Margin="5,1,1,3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" MaxHeight="25" Width="80"
-                           Click="ButtonReWriteStart_Click" IsEnabled="False"/>
-                </Grid>
-            </Grid>
-            <Grid Grid.Row="1">
-                <ListBox x:Name="CharacterImageList" ItemsSource="{Binding ChatNameList}" Margin="0"
-                         Visibility="Hidden"
-                         AllowDrop="True"
-                         PreviewDragOver="ListBox_PreviewDragOver"
-                         Drop="ListBox_Drop"
-                         SelectedItem="{Binding SelectedName, Mode=TwoWay}"
-                         ContextMenuOpening="CharacterImageList_ContextMenuOpening"
-                         ToolTip="画像はドラッグアンドドロップでも追加可能">
-                    <ListBox.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem x:Name="ChangeDefaultImageContext" Header="画像差し替え"
-                                      IsEnabled="False" Click="ChangeDefaultImageContext_Click"/>
-                            <MenuItem x:Name="DeleteAllImageContext" Header="画像全削除"
-                                      IsEnabled="False" Click="DeleteAllImageContext_Click"/>
-                        </ContextMenu>
-                    </ListBox.ContextMenu>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="5" VerticalAlignment="Center">
-                                <StackPanel.Style>
-                                    <Style TargetType="StackPanel">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Name}" Value="EVENT_IMAGE">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Name}" Value="EVENT_CHARACTER_IMAGE">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </StackPanel.Style>
-                                <!-- 文字列 -->
-                                <TextBlock Text="{Binding Name}" Width="150" VerticalAlignment="Center"/>
+                <Grid Grid.Row="1">
+                    <ListBox x:Name="CharacterImageList" ItemsSource="{Binding ChatNameList}" Margin="0"
+                             Visibility="Hidden"
+                             AllowDrop="True"
+                             PreviewDragOver="ListBox_PreviewDragOver"
+                             Drop="ListBox_Drop"
+                             SelectedItem="{Binding SelectedName, Mode=TwoWay}"
+                             ContextMenuOpening="CharacterImageList_ContextMenuOpening"
+                             ToolTip="画像はドラッグアンドドロップでも追加可能">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="ChangeDefaultImageContext" Header="画像差し替え"
+                                          IsEnabled="False" Click="ChangeDefaultImageContext_Click"/>
+                                <MenuItem x:Name="DeleteAllImageContext" Header="画像全削除"
+                                          IsEnabled="False" Click="DeleteAllImageContext_Click"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="5" VerticalAlignment="Center">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Name}" Value="EVENT_IMAGE">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Name}" Value="EVENT_CHARACTER_IMAGE">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <!-- 文字列 -->
+                                    <TextBlock Text="{Binding Name}" Width="150" VerticalAlignment="Center"/>
 
-                                <Grid ToolTip="未実装機能です">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Content="カラーコード" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                    <TextBox Grid.Row="1" Text="FFFFFF" Width="80" Height="20" Margin="5,0" 
-                                             VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="False"/>
-                                </Grid>                                
-                                <!-- 画像追加ボタン -->
-                                <Button Content="追加" Width="60" Margin="5,0"
-                                        Click="AddImageButton_Click"/>
+                                    <Grid ToolTip="未実装機能です">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="カラーコード" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Text="FFFFFF" Width="80" Height="20" Margin="5,0" 
+                                                 VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="False"/>
+                                    </Grid>                                
+                                    <!-- 画像追加ボタン -->
+                                    <Button Content="追加" Width="60" Margin="5,0"
+                                            Click="AddImageButton_Click"/>
 
-                                <!-- 画像 + バッジ -->
-                                <Grid Width="80" Height="80" Margin="5">
-                                    <!-- 画像 -->
-                                    <Image Source="{Binding DefaultImage}" Stretch="UniformToFill"/>
+                                    <!-- 画像 + バッジ -->
+                                    <Grid Width="80" Height="80" Margin="5">
+                                        <!-- 画像 -->
+                                        <Image Source="{Binding DefaultImage}" Stretch="UniformToFill"/>
 
-                                    <!-- 円形 -->
-                                    <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                          Width="20" Height="20"
-                                          Visibility="{Binding ImageKeys.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                                        <Ellipse Fill="Salmon"/>
-                                        <TextBlock Text="{Binding ImageKeys.Count}" 
-                                               Foreground="White"
-                                               FontSize="12"
-                                               FontWeight="Bold"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               /> 
+                                        <!-- 円形 -->
+                                        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                              Width="20" Height="20"
+                                              Visibility="{Binding ImageKeys.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                                            <Ellipse Fill="Salmon"/>
+                                            <TextBlock Text="{Binding ImageKeys.Count}" 
+                                                   Foreground="White"
+                                                   FontSize="12"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   /> 
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <TextBlock x:Name="ZipAnalyzeText" Text="Zip解析時はこの欄は使用されません"
-                   Visibility="Hidden"
-                   Foreground="Gray"
-                   FontStyle="Italic"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="16" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock x:Name="ZipAnalyzeText" Text="Zip解析時はこの欄は使用されません"
+                       Visibility="Hidden"
+                       Foreground="Gray"
+                       FontStyle="Italic"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="16" />
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid Grid.Column="1" x:Name="DetailGrid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="9*"/>
-            </Grid.RowDefinitions>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" x:Name="DetailGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="9*"/>
                 </Grid.RowDefinitions>
-                <Border
-                Grid.Row="2" Grid.ColumnSpan="3"
-                BorderBrush="Gray"
-                BorderThickness="0,0,0,1"
-                CornerRadius="0"/>
-                <Button x:Name="buttonAddEventImage" Grid.Column="0" Content="イベント画像欄追加" Margin="1,3,1,3"
-                        Click="ButtonAddEventImage_Click" />
-                <Button x:Name="buttonAddCharacterImage" Grid.Column="1" Content="イベントキャラ画像欄追加" Margin="1,3,1,3"
-                        Click="ButtonAddCharacterImage_Click" />
-                <Button x:Name="buttonDeleteImage" Grid.Column="2" Content="追加欄削除" Margin="1,3,1,3"
-                        Click="ButtonDeleteImage_Click"/>
-                <CheckBox x:Name="OverrideCheck" Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Left"
-                          Content="画像差し替え時、同名キャラの以降のチャット画像を全て上書きする" Margin="1,3,1,3"/>
-                <CheckBox x:Name="AllDeleteCheck" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Left"
-                          Checked="AllDeleteCheck_Checked" Unchecked="AllDeleteCheck_Unchecked"
-                          Content="追加欄以外のチャットを削除可能にする(非推奨)" Margin="1,3,1,3"/>
-            </Grid>
-            <Grid Grid.Row="1">
-                <ListBox x:Name="DetailMessageList" ItemsSource="{Binding ChatMessageList}" Margin="0"
-                         SelectedItem="{Binding SelectedMessage, Mode=TwoWay}"
-                         AllowDrop="True"
-                         PreviewDragOver="DetailMessageList_PreviewDragOver"
-                         Drop="DetailMessageList_Drop"
-                         MouseDoubleClick="DetailMessageList_MouseDoubleClick"
-                         ContextMenuOpening="DetailMessageList_ContextMenuOpening"
-                         HorizontalContentAlignment="Stretch">
-                    <ListBox.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem x:Name="ChangeImageContext" Header="画像差し替え"
-                                      IsEnabled="False" Click="ChangeImageContext_Click"/>
-                            <MenuItem x:Name="ShowImageContext" Header="選択中画像の拡大表示"
-                                      IsEnabled="False" Click="ShowImageContext_Click"/>
-                            <MenuItem x:Name="AddBeforeEventImageContext" Header="イベント画像欄追加(前行)" 
-                                      IsEnabled="False" Click="AddBeforeEventImageContext_Click"/>
-                            <MenuItem x:Name="AddAfterEventImageContext" Header="イベント画像欄追加(後行)" 
-                                      IsEnabled="False" Click="AddAfterEventImageContext_Click"/>
-                            <MenuItem x:Name="AddBeforeEventCharacterImageContext" Header="イベントキャラ画像欄追加(前行)" 
-                                      IsEnabled="False" Click="AddBeforeEventCharacterImageContext_Click"/>
-                            <MenuItem x:Name="AddAfterEventCharacterImageContext" Header="イベントキャラ画像欄追加(後行)" 
-                                      IsEnabled="False" Click="AddAfterEventCharacterImageContext_Click"/>
-                            <MenuItem x:Name="DeleteMessageContext" Header="チャット削除" 
-                                      IsEnabled="False" Click="DeleteMessageContext_Click"/>
-                        </ContextMenu>
-                    </ListBox.ContextMenu>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Border>
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Background" Value="Transparent"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsAddedMessage}" Value="True">
-                                                <Setter Property="Background" Value="LightYellow"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Area}" Value="雑談">
-                                                <Setter Property="Background" Value="LightGray"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsSecretMessage}" Value="True">
-                                                <Setter Property="Background" Value="LightPink"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Border
+                    Grid.Row="2" Grid.ColumnSpan="3"
+                    BorderBrush="Gray"
+                    BorderThickness="0,0,0,1"
+                    CornerRadius="0"/>
+                    <Button x:Name="buttonAddEventImage" Grid.Column="0" Content="イベント画像欄追加" Margin="1,3,1,3"
+                            Click="ButtonAddEventImage_Click" />
+                    <Button x:Name="buttonAddCharacterImage" Grid.Column="1" Content="イベントキャラ画像欄追加" Margin="1,3,1,3"
+                            Click="ButtonAddCharacterImage_Click" />
+                    <Button x:Name="buttonDeleteImage" Grid.Column="2" Content="追加欄削除" Margin="1,3,1,3"
+                            Click="ButtonDeleteImage_Click"/>
+                    <CheckBox x:Name="OverrideCheck" Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Left"
+                              Content="画像差し替え時、同名キャラの以降のチャット画像を全て上書きする" Margin="1,3,1,3"/>
+                    <CheckBox x:Name="AllDeleteCheck" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Left"
+                              Checked="AllDeleteCheck_Checked" Unchecked="AllDeleteCheck_Unchecked"
+                              Content="追加欄以外のチャットを削除可能にする(非推奨)" Margin="1,3,1,3"/>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <ListBox x:Name="DetailMessageList" ItemsSource="{Binding ChatMessageList}" Margin="0"
+                             SelectedItem="{Binding SelectedMessage, Mode=TwoWay}"
+                             AllowDrop="True"
+                             PreviewDragOver="DetailMessageList_PreviewDragOver"
+                             Drop="DetailMessageList_Drop"
+                             MouseDoubleClick="DetailMessageList_MouseDoubleClick"
+                             ContextMenuOpening="DetailMessageList_ContextMenuOpening"
+                             HorizontalContentAlignment="Stretch">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="ChangeImageContext" Header="画像差し替え"
+                                          IsEnabled="False" Click="ChangeImageContext_Click"/>
+                                <MenuItem x:Name="ShowImageContext" Header="選択中画像の拡大表示"
+                                          IsEnabled="False" Click="ShowImageContext_Click"/>
+                                <MenuItem x:Name="AddBeforeEventImageContext" Header="イベント画像欄追加(前行)" 
+                                          IsEnabled="False" Click="AddBeforeEventImageContext_Click"/>
+                                <MenuItem x:Name="AddAfterEventImageContext" Header="イベント画像欄追加(後行)" 
+                                          IsEnabled="False" Click="AddAfterEventImageContext_Click"/>
+                                <MenuItem x:Name="AddBeforeEventCharacterImageContext" Header="イベントキャラ画像欄追加(前行)" 
+                                          IsEnabled="False" Click="AddBeforeEventCharacterImageContext_Click"/>
+                                <MenuItem x:Name="AddAfterEventCharacterImageContext" Header="イベントキャラ画像欄追加(後行)" 
+                                          IsEnabled="False" Click="AddAfterEventCharacterImageContext_Click"/>
+                                <MenuItem x:Name="DeleteMessageContext" Header="チャット削除" 
+                                          IsEnabled="False" Click="DeleteMessageContext_Click"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border>
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsAddedMessage}" Value="True">
+                                                    <Setter Property="Background" Value="LightYellow"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Area}" Value="雑談">
+                                                    <Setter Property="Background" Value="LightGray"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsSecretMessage}" Value="True">
+                                                    <Setter Property="Background" Value="LightPink"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
 
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <Image Source="{Binding Image}" Width="80" Height="80" Stretch="UniformToFill" Margin="5">
-                                        <Image.Style>
-                                            <Style TargetType="Image">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Area}" Value="雑談">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsSecretMessage}" Value="True">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                    </Image>
-                                    <StackPanel Orientation="Vertical" Margin="10,0,0,0">                                   
-                                        <TextBlock Text="{Binding Area}" FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
-                                        <TextBlock Text="{Binding Text}" TextWrapping="NoWrap"/>
+                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                        <Image Source="{Binding Image}" Width="80" Height="80" Stretch="UniformToFill" Margin="5">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Area}" Value="雑談">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsSecretMessage}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <StackPanel Orientation="Vertical" Margin="10,0,0,0">                                   
+                                            <TextBlock Text="{Binding Area}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Text}" TextWrapping="NoWrap"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </Grid>
         </Grid>
-    </Grid>
+    </DockPanel>
 </Window>

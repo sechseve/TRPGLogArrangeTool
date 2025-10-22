@@ -7,9 +7,12 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 using TRPGLogArrangeTool.resource;
@@ -29,7 +32,7 @@ namespace TRPGLogArrangeTool.ViewModel
         private const string zipName = "chat.xml";
         private const string zipNameFly = "fly_chat.xml";
         private const string zipStandFly = "fly_data.xml";
-        private static readonly string[] allowedExtensions = new[] { ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif" };
+        private static readonly string[] allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
         #endregion
 
         #region データ部
@@ -64,7 +67,7 @@ namespace TRPGLogArrangeTool.ViewModel
 
         public MainViewModel()
         {
-            //初期処理            
+            //初期処理
         }
 
         #region ココフォリア処理
@@ -215,7 +218,7 @@ namespace TRPGLogArrangeTool.ViewModel
                 return false;
             }
             string xmlContent = ExtractXmlFromZip(folderPath, targetPath);
-            ParseChatMessages(xmlContent, folderPath, flyFlg,detailCheck);
+            ParseChatMessages(xmlContent, folderPath, flyFlg, detailCheck);
             return true;
         }
 
@@ -300,7 +303,10 @@ namespace TRPGLogArrangeTool.ViewModel
                     string name = chatElement.Attribute("name")?.Value ?? string.Empty;
                     string text = TextHtmlEmbellishment(chatElement.Value.Trim());
                     string imageIdentifier = chatElement.Attribute("imageIdentifier")?.Value ?? string.Empty;
-
+                    if (imageIdentifier == "null")
+                    {
+                        imageIdentifier = string.Empty;
+                    }
                     if (flyFlg)
                     {
                         string selectedStandName = chatElement.Attribute("standName")?.Value ?? string.Empty;
@@ -358,8 +364,6 @@ namespace TRPGLogArrangeTool.ViewModel
             // ZIP内画像をImageCacheに登録
             using (var archive = ZipFile.OpenRead(folderPath))
             {
-                string[] allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
-
                 foreach (var entry in archive.Entries)
                 {
                     string nameWithoutExt = Path.GetFileNameWithoutExtension(entry.Name);
@@ -421,7 +425,7 @@ namespace TRPGLogArrangeTool.ViewModel
                 {
                     if (!ConvertWrite(true))
                     {
-                        ImageAddErrorMessage(errorImage,true);
+                        ImageAddErrorMessage(errorImage, true);
                     }
                 }
                 else
@@ -590,7 +594,7 @@ namespace TRPGLogArrangeTool.ViewModel
                             sb.AppendLine(string.Format(HtmlResource.DivIcon, writeData.ImageKey));
                         }
                         sb.AppendLine(HtmlResource.DivChatTextArea);
-                        sb.AppendLine(string.Format(HtmlResource.DivMainChat, tmpUserName,tmpAreaName));
+                        sb.AppendLine(string.Format(HtmlResource.DivMainChat, tmpUserName, tmpAreaName));
                     }
                     sb.AppendLine(string.Format(HtmlResource.DivChatArea, writeData.Text));
                 }
@@ -1051,7 +1055,7 @@ namespace TRPGLogArrangeTool.ViewModel
         /// 画像追加エラーダイアログ表示
         /// </summary>
         /// <param name="errorFileName"></param>
-        public static void ImageAddErrorMessage(List<string> errorFileName,bool writeHtmlFlg = false)
+        public static void ImageAddErrorMessage(List<string> errorFileName, bool writeHtmlFlg = false)
         {
             if (errorFileName.Count == 0)
             {
@@ -1090,7 +1094,83 @@ namespace TRPGLogArrangeTool.ViewModel
                 }
             }
         }
+
+        #region バージョンチェック
+        //バージョン比較処理
+        public static async Task CheckForUpdatesAsync()
+        {
+            string embedded = GetEmbeddedVersion();
+            string latest = await GetLatestVersionFromGitHubAsync();
+
+            if (latest == "取得失敗")
+            {
+                MessageBox.Show("バージョンの確認に失敗しました。", CONST_ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (Version.TryParse(embedded, out var localVer) && Version.TryParse(latest, out var remoteVer))
+            {
+                if (remoteVer > localVer)
+                {
+                    var result = MessageBox.Show(
+                        $"新しいバージョンが利用可能です！\n\n現在: v{localVer}\n最新: v{remoteVer}\n\n" +
+                        "ダウンロードページを開きますか？",
+                        CONST_INFOMATION,
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("https://github.com/sechseve/TRPGLogArrangeTool/releases");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("お使いのバージョンは最新です。", CONST_INFOMATION, MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("バージョンの確認に失敗しました。", CONST_ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+        // 埋め込みversionの内容を取得
+        public static string GetEmbeddedVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourceName = "TRPGLogArrangeTool.version.txt";
+
+            Stream stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
+            {
+                return "0.0.0";
+            }
+
+            var reader = new StreamReader(stream);
+            return reader.ReadToEnd().Trim();
+        }
+
+        // GitHub上のversionを取得
+        public static async Task<string> GetLatestVersionFromGitHubAsync()
+        {
+            string url = "https://raw.githubusercontent.com/sechseve/TRPGLogArrangeTool/refs/heads/master/version.txt";
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("TRPGLogArrangeTool/1.0");
+
+            try
+            {
+                string content = await client.GetStringAsync(url);
+                return content.Trim();
+            }
+            catch
+            {
+                return "取得失敗";
+            }
+        }
+
         #endregion
 
+        #endregion
     }
 }

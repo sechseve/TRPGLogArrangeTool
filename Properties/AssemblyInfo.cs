@@ -1,50 +1,50 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 
-// アセンブリに関する一般的な情報は、次の方法で制御されます
-// アセンブリに関連付けられている情報を変更するには、
-// これらの属性値を変更してください。
+// �A�Z���u���Ɋւ����ʓI�ȏ��́A���̕��@�Ő��䂳��܂�
+// �A�Z���u���Ɋ֘A�t�����Ă������ύX����ɂ́A
+// �����̑����l��ύX���Ă��������B
 [assembly: AssemblyTitle("TRPGLogArrangeTool")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TRPGLogArrangeTool")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyCopyright("Copyright c  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// ComVisible を false に設定すると、このアセンブリ内の型は COM コンポーネントから
-// 参照できなくなります。COM からこのアセンブリ内の型にアクセスする必要がある場合は、
-// その型の ComVisible 属性を true に設定してください。
+// ComVisible �� false �ɐݒ肷��ƁA���̃A�Z���u�����̌^�� COM �R���|�[�l���g����
+// �Q�Ƃł��Ȃ��Ȃ�܂��BCOM ���炱�̃A�Z���u�����̌^�ɃA�N�Z�X����K�v������ꍇ�́A
+// ���̌^�� ComVisible ������ true �ɐݒ肵�Ă��������B
 [assembly: ComVisible(false)]
 
-//ローカライズ可能なアプリケーションのビルドを開始するには、
-//.csproj ファイルの <UICulture>CultureYouAreCodingWith</UICulture> を
-//<PropertyGroup> 内部で設定します。たとえば、
-//ソース ファイルで英語を使用している場合、<UICulture> を en-US に設定します。次に、
-//下の NeutralResourceLanguage 属性のコメントを解除します。下の行の "en-US" を
-//プロジェクト ファイルの UICulture 設定と一致するよう更新します。
+//���[�J���C�Y�\�ȃA�v���P�[�V�����̃r���h���J�n����ɂ́A
+//.csproj �t�@�C���� <UICulture>CultureYouAreCodingWith</UICulture> ��
+//<PropertyGroup> �����Őݒ肵�܂��B���Ƃ��΁A
+//�\�[�X �t�@�C���ŉp����g�p���Ă���ꍇ�A<UICulture> �� en-US �ɐݒ肵�܂��B���ɁA
+//���� NeutralResourceLanguage �����̃R�����g���������܂��B���̍s�� "en-US" ��
+//�v���W�F�N�g �t�@�C���� UICulture �ݒ�ƈ�v����悤�X�V���܂��B
 
 //[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
 
 
 [assembly: ThemeInfo(
-    ResourceDictionaryLocation.None, //テーマ固有のリソース ディクショナリが置かれている場所
-                                     //(リソースがページ、
-                                     // またはアプリケーション リソース ディクショナリに見つからない場合に使用されます)
-    ResourceDictionaryLocation.SourceAssembly //汎用リソース ディクショナリが置かれている場所
-                                              //(リソースがページ、
-                                              //アプリケーション、またはいずれのテーマ固有のリソース ディクショナリにも見つからない場合に使用されます)
+    ResourceDictionaryLocation.None, //�e�[�}�ŗL�̃��\�[�X �f�B�N�V���i�����u����Ă���ꏊ
+                                     //(���\�[�X���y�[�W�A
+                                     // �܂��̓A�v���P�[�V���� ���\�[�X �f�B�N�V���i���Ɍ�����Ȃ��ꍇ�Ɏg�p����܂�)
+    ResourceDictionaryLocation.SourceAssembly //�ėp���\�[�X �f�B�N�V���i�����u����Ă���ꏊ
+                                              //(���\�[�X���y�[�W�A
+                                              //�A�v���P�[�V�����A�܂��͂�����̃e�[�}�ŗL�̃��\�[�X �f�B�N�V���i���ɂ�������Ȃ��ꍇ�Ɏg�p����܂�)
 )]
 
 
-// アセンブリのバージョン情報は次の 4 つの値で構成されています:
+// �A�Z���u���̃o�[�W�������͎��� 4 �̒l�ō\������Ă��܂�:
 //
-//      メジャー バージョン
-//      マイナー バージョン
-//      ビルド番号
-//      リビジョン
+//      ���W���[ �o�[�W����
+//      �}�C�i�[ �o�[�W����
+//      �r���h�ԍ�
+//      ���r�W����
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

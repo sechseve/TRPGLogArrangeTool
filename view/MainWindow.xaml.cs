@@ -790,9 +790,13 @@ namespace TRPGLogArrangeTool
                 }
             }
         }
-
+        private async void menuUpdateCheck_Click(object sender, RoutedEventArgs e)
+        {
+            await MainViewModel.CheckForUpdatesAsync();
+        }
         #endregion
 
         #endregion
+
     }
 }
