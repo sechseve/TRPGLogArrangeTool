@@ -1096,7 +1096,10 @@ namespace TRPGLogArrangeTool.ViewModel
         }
 
         #region バージョンチェック
-        //バージョン比較処理
+        /// <summary>
+        /// バージョン比較処理
+        /// </summary>
+        /// <returns></returns>
         public static async Task CheckForUpdatesAsync()
         {
             string embedded = GetEmbeddedVersion();
@@ -1134,7 +1137,10 @@ namespace TRPGLogArrangeTool.ViewModel
                 return;
             }
         }
-        // 埋め込みversionの内容を取得
+        /// <summary>
+        /// 埋め込みversionの内容を取得
+        /// </summary>
+        /// <returns></returns>
         public static string GetEmbeddedVersion()
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -1150,7 +1156,10 @@ namespace TRPGLogArrangeTool.ViewModel
             return reader.ReadToEnd().Trim();
         }
 
-        // GitHub上のversionを取得
+        /// <summary>
+        /// GitHub上のversionを取得
+        /// </summary>
+        /// <returns></returns>
         public static async Task<string> GetLatestVersionFromGitHubAsync()
         {
             string url = "https://raw.githubusercontent.com/sechseve/TRPGLogArrangeTool/refs/heads/master/version.txt";
