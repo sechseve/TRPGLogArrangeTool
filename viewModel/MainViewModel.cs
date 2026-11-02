@@ -83,12 +83,12 @@ namespace TRPGLogArrangeTool.ViewModel
             ChatNameList.Add(new ChatName() { Name = NAME_EVENT });
             ChatNameList.Add(new ChatName() { Name = NAME_EVENT_CHARACTER });
 
-            var html = System.IO.File.ReadAllText(address);
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html);
-
             try
             {
+                var html = File.ReadAllText(address);
+                var doc = new HtmlDocument();
+                doc.LoadHtml(html);
+
                 // <p> タグごとにループ
                 var ps = doc.DocumentNode.SelectNodes("//p");
                 for (int i = 0; i < ps.Count; i++)
@@ -897,23 +897,22 @@ namespace TRPGLogArrangeTool.ViewModel
         /// <returns></returns>
         private string EmbellishmentConverter(string input)
         {
-
             while (true)
             {
                 string oldInput = input;
 
                 input = input.Trim('\n');
-                //空白削除
+                // 空白削除
                 input = input.Trim(' ');
                 input = input.Trim('　');
-                //先頭最終改行のみ削除
+                // 先頭／末尾の改行のみ削除
                 if (input.StartsWith("\r\n", StringComparison.OrdinalIgnoreCase))
                 {
-                    input = input.Substring(4);
+                    input = input.Substring(2);
                 }
                 if (input.EndsWith("\r\n", StringComparison.OrdinalIgnoreCase))
                 {
-                    input = input.Substring(0, input.Length - 4);
+                    input = input.Substring(0, input.Length - 2);
                 }
                 if (input.StartsWith("<br>", StringComparison.OrdinalIgnoreCase))
                 {
@@ -928,13 +927,13 @@ namespace TRPGLogArrangeTool.ViewModel
                     break;
                 }
             }
-            //打ち消し線
-            input = Regex.Replace(input, "~~~(.*?)~~~", "<s>$1</s>");
-            //強調
-            input = Regex.Replace(input, "###(.*?)###", "<b>$1</b>");
-            //改行
+            // 打ち消し線
+            input = Regex.Replace(input, "~~~(.*?)~~~", "<s>$1</s>", RegexOptions.Singleline);
+            // 強調
+            input = Regex.Replace(input, "###(.*?)###", "<b>$1</b>", RegexOptions.Singleline);
+            // 改行を <br> に
             input = Regex.Replace(input, @"\r?\n", "<br>");
-            //文字装飾修正
+            // 文字装飾修正
             input = input.Replace("\"]+\"", "\"] +\"");
 
             return input;

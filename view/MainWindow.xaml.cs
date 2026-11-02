@@ -171,33 +171,29 @@ namespace TRPGLogArrangeTool
         /// <prm name="e"></prm>
         private void ButtonFileRead_Click(object sender, RoutedEventArgs e)
         {
-
-            if (string.IsNullOrEmpty(textBoxFileAddress.Text))
+            var path = textBoxFileAddress.Text;
+            if (string.IsNullOrWhiteSpace(path))
             {
                 MessageBox.Show("ファイルを指定してください", CONST_ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (!File.Exists(textBoxFileAddress.Text))
+
+            if (!File.Exists(path))
             {
                 MessageBox.Show("ファイルの指定が誤っています", CONST_ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            // 小文字に統一
-            string extension = System.IO.Path.GetExtension(textBoxFileAddress.Text).ToLower();
-            if (radioButtonCC.IsChecked.Value)
+
+            // 小文字に統一（カルチャ非依存）
+            string extension = System.IO.Path.GetExtension(path)?.ToLowerInvariant();
+
+            if (radioButtonCC.IsChecked == true)
             {
                 if (extension == ".html" || extension == ".htm")
                 {
                     ZipAnalyzeText.Visibility = Visibility.Hidden;
                     CharacterImageList.Visibility = Visibility.Visible;
-                    if (viewModel.HtmlAnalyze(textBoxFileAddress.Text))
-                    {
-                        buttonReWriteStart.IsEnabled = true;
-                    }
-                    else
-                    {
-                        buttonReWriteStart.IsEnabled = false;
-                    }
+                    buttonReWriteStart.IsEnabled = viewModel.HtmlAnalyze(path);
                 }
                 else
                 {
@@ -205,20 +201,13 @@ namespace TRPGLogArrangeTool
                     return;
                 }
             }
-            else if (radioButtonUD.IsChecked.Value)
+            else if (radioButtonUD.IsChecked == true)
             {
                 if (extension == ".zip")
                 {
                     CharacterImageList.Visibility = Visibility.Hidden;
                     ZipAnalyzeText.Visibility = Visibility.Visible;
-                    if (viewModel.ZipAnalyze(textBoxFileAddress.Text, checkBoxDetail.IsChecked.Value, checkStandUse.IsChecked.Value))
-                    {
-                        buttonReWriteStart.IsEnabled = true;
-                    }
-                    else
-                    {
-                        buttonReWriteStart.IsEnabled = false;
-                    }
+                    buttonReWriteStart.IsEnabled = viewModel.ZipAnalyze(path, checkBoxDetail.IsChecked == true, checkStandUse.IsChecked == true);
                 }
                 else
                 {
@@ -426,7 +415,7 @@ namespace TRPGLogArrangeTool
 
         private void DeleteAllImageContext_Click(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelectedName != null || viewModel.ChatNameList.Where(x => x.Name == viewModel.SelectedName.Name).Count() > 0)
+            if (viewModel.SelectedName != null && viewModel.ChatNameList.Where(x => x.Name == viewModel.SelectedName.Name).Count() > 0)
             {
                 if (MessageBox.Show("このキャラクターのすべての画像を削除します、本当によろしいでしょうか？", CONST_WARNING, MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {

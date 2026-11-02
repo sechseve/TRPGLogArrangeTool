@@ -226,13 +226,15 @@ width: 100%;
 }
 .chatImage img {
   max-width: 70%;
+  max-height: 90vh;
   border: 1px solid #ccc;
   border-radius: 8px;
   display: block;
   margin: 12px auto;
 }
 .chatImage_Icon img {
-  max-width: 20%;
+  max-width: 40%;
+  max-height: 80vh;
   border: 1px solid #ccc;
   border-radius: 8px;
   display: block;
